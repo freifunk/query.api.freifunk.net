@@ -104,9 +104,9 @@ This should create a new Eclipse project that uses maven and egit.
 
 (optional)
 
-To add source and JavaDoc for DeepaMehta add  
+To add source and JavaDoc for DeepaMehta...
+
+...do the same as before, but use instead the DeepaMehta repository: 
 
 SCM URL: (git): git://github.com/jri/deepamehta.git
-
-
 

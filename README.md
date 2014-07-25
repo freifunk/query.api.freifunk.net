@@ -15,7 +15,7 @@ mvn install -P all
 
 2. Setup for Hot-Deployment 
 
-See here for complete Instructions: https://trac.deepamehta.de/wiki/PluginDevelopmentGuide
+Momplete Instructions: https://trac.deepamehta.de/wiki/PluginDevelopmentGuide
 
 In DeepaMehta's pom.xml: add the plugin's target directory (here: `/home/mt/query/query.api.freifunk.net/dm4-ffapi-import/target`) to the felix.fileinstall.dir property's CDATA section. Important: don't forget to append a comma to the previous line:
 
@@ -42,7 +42,7 @@ Now start DeepaMehta. In the directory deepamehta (where you've build):
 mvn pax:run 
 ```
 
-In the Plugin directory (here: `/home/mt/query/query.api.freifu    nk.net/dm4-ffapi-import/target`run: 
+In the Plugin directory (here: `/home/mt/query/query.api.freifunk.net/dm4-ffapi-import/target`run: 
 
 ```bash
 mvn clean package
@@ -89,4 +89,24 @@ The package should now appear in DeepaMehta
 [INFO] ------------------------------------------------------------------------
 [~/query/query.api.freifunk.net/dm4-ffapi-import]$                                         *[master]
 ```
+
+# Eclipse (una, Java 2 EE Download
+
+(tested with Eclipse Luna J2EE edition)
+
+New Project -> Check out Maven Projects from SCM 
+
+SCM URL: (git): git://github.com/glycoknob/query.api.freifunk.net
+
+If git is not available install the "SCM URL Install m2e Team provider" for maven git suppor via the link in the interface
+
+This should create a new Eclipse project that uses maven and egit.
+
+(optional)
+
+To add source and JavaDoc for DeepaMehta add  
+
+SCM URL: (git): git://github.com/jri/deepamehta.git
+
+
 

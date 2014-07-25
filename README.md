@@ -50,7 +50,7 @@ mvn clean package
 
 The package should now appear in DeepaMehta
 
-```bash
+```
 [~/query/query.api.freifunk.net/dm4-ffapi-import]$ mvn clean package                       *[master] 
 [INFO] Scanning for projects...
 [INFO]                                                                         

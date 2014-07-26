@@ -31,7 +31,7 @@
                 <configuration>
                     <instructions>
                         <Bundle-Activator>
-                            net.freifunk.api.dm4.import.ImportPlugin
+                            net.freifunk.api.dm4.ImportPlugin
                         </Bundle-Activator>
                     </instructions>
                 </configuration>

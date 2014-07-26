@@ -5,8 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<name>Freifunk API Data </name>
-	<groupId>net.freifunk.api.dm4.import</groupId>
-	<artifactId>ffapi-import</artifactId>
+	<groupId>net.freifunk.api</groupId>
 	<version>0.1-SNAPSHOT</version>
 	<packaging>bundle</packaging>
 
@@ -24,4 +23,5 @@
         </dependency>
     </dependencies>
 
+	 <artifactId>dm4</artifactId>
 </project>

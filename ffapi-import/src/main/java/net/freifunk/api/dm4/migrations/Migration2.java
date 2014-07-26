@@ -6,8 +6,7 @@ public class Migration2 extends Migration {
 
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
-		
+		//
 	}
 
 }

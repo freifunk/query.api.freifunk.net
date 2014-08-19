@@ -1,0 +1,19 @@
+{
+    topic_types: [
+        {
+            value: "Freifunk Community Name",
+            uri: "freifunk.community.name",
+            data_type_uri: "dm4.core.text",
+            index_mode_uris: ["dm4.core.fulltext"],
+            view_config_topics: [
+                {
+                    type_uri: "dm4.webclient.view_config",
+                    composite: {
+                        dm4.webclient.show_in_create_menu: true
+                    }
+                }
+             ]
+        }
+    ]
+}
+

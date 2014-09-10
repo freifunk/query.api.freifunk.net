@@ -1,5 +1,9 @@
 package net.freifunk.api.dm4;
 
+import de.deepamehta.core.Topic;
+import de.deepamehta.core.model.CompositeValueModel;
+import de.deepamehta.core.model.SimpleValue;
+import de.deepamehta.core.model.TopicModel;
 import de.deepamehta.core.osgi.PluginActivator;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -19,6 +23,7 @@ public class ImportPlugin extends PluginActivator {
 
     @Override
     public void init() {
+        deleteAllImportedDataNodes();
         log.info("Freifunk API Data Plugin is initializing");
         InputStream ffDirectory = getStaticResource("web/ffSummarizedDir.json");
         log.info("Freifunk API Data Plugin fetched summarized API Directory");
@@ -53,20 +58,70 @@ public class ImportPlugin extends PluginActivator {
                     // 4) Grab single community
                     JSONObject freifunkCommunity = 
                         freifunkApiSummaryObject.getJSONObject(community_keys.getString(i));
-                    // 5) Store JSONObject (with various schemas) as a Freifunk Community Topic
+                    // 5) Convert API JSONObject to a "Freifunk Community"
+                    CompositeValueModel communityModel = new CompositeValueModel();
                     if (freifunkCommunity.has("name")) {
-                        log.info("Hello Freifunk Community: " + freifunkCommunity.getString("name"));   
+                        String name = freifunkCommunity.getString("name");
+                        log.info("Hello Freifunk Community: " + name);
+                        communityModel.put("net.freifunk.community.name", name);
                     }
+                    if (freifunkCommunity.has("url")) {
+                        String url = freifunkCommunity.getString("url");
+                        communityModel.put("dm4.webbrowser.url", url);
+                    }
+                    if (freifunkCommunity.has("techDetails")) {
+                        JSONObject techDetails = freifunkCommunity.getJSONObject("techDetails");
+                        if (techDetails.has("vpn")) {
+                            String vpn = techDetails.getString("vpn");
+                            enrichAboutVPNTopic(communityModel, vpn);
+                        }
+                        // ### ..
+                    }
+                    if (freifunkCommunity.has("mtime")) {
+                        String mtime = freifunkCommunity.getString("mtime");
+                        communityModel.put("net.freifunk.community.api_mtime", mtime);
+                    }
+                    if (freifunkCommunity.has("api")) {
+                        String api = freifunkCommunity.getString("api");
+                        enrichAboutApiVersionTopic(communityModel, api);
+                    }
+                    dms.createTopic(new TopicModel("net.freifunk.community", communityModel), null);
                 }
             }
-            // 3) 
-            log.info("");
+            log.info("### Importer created" + community_keys.length() + " Freifunk Communities from API Directory");
         } catch (UnsupportedEncodingException ex) {
             log.severe(ex.getMessage());
         } catch (IOException ex) {
             log.severe(ex.getMessage());
         } catch (JSONException ex) {
             log.severe(ex.getMessage());
+        }
+    }
+    
+    private void deleteAllImportedDataNodes () {
+        for (Topic node : dms.getTopics("net.freifunk.community", false, 0)) {
+            dms.deleteTopic(node.getId());
+        }
+    }
+
+    private void enrichAboutApiVersionTopic(CompositeValueModel communityModel, String api) {
+        // Note: IndexMode.KEY needs to be set on queried TopicType to succeed with the following type of query in DM4
+        Topic existingApiTopic = dms.getTopic("net.freifunk.community.api_version", new SimpleValue(api), false);
+        if (existingApiTopic != null) { // Reference existing API Version Topic
+            communityModel.putRef("net.freifunk.community.api_version", existingApiTopic.getId());
+        } else { // Create new API Version Topic
+            communityModel.put("net.freifunk.community.api_version", api);
+        }
+    }
+
+    private void enrichAboutVPNTopic(CompositeValueModel communityModel, String vpn) {
+        // Note: IndexMode.KEY needs to be set on queried TopicType to succeed with the following type of query in DM4
+        String alteredVPNValue = vpn.toLowerCase().trim();
+        Topic existingVPNTopic = dms.getTopic("net.freifunk.community.vpn", new SimpleValue(alteredVPNValue), false);
+        if (existingVPNTopic != null) { // Reference existing VPN Value Topic
+            communityModel.putRef("net.freifunk.community.vpn", existingVPNTopic.getId());
+        } else { // Create new VPN Value Topic
+            communityModel.put("net.freifunk.community.vpn", alteredVPNValue);
         }
     }
     

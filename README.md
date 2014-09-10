@@ -5,11 +5,9 @@ Freifunk API Query Client
 
 # Development setup  
 
-0. Build dependencies 
+0. Install dependencies 
 
-Java JDK 1.7?
-maven 
-?
+Java JDK 1.7, Maven 3 
 
 1. Build DeepaMehta
 
@@ -35,7 +33,7 @@ In DeepaMehta's pom.xml: add the plugin's target directory (here: `/home/mt/quer
             ${project.basedir}/modules/dm4-webclient/target,
             ...
             ${project.basedir}/modules/dm4-storage-neo4j/target,
-            /home/mt/query/query.api.freifunk.net/dm4-ffapi-import/target
+            /home/mt/query/query.api.freifunk.net/ffapi-import/target
         ]]>
     </felix.fileinstall.dir>
     ...
@@ -48,7 +46,7 @@ Now start DeepaMehta. In the directory deepamehta (where you've build):
 mvn pax:run 
 ```
 
-In the Plugin directory (here: `/home/mt/query/query.api.freifunk.net/dm4-ffapi-import/target`run: 
+In the Plugin directory (here: `/home/mt/query/query.api.freifunk.net/ffapi-import` run: 
 
 ```bash
 mvn clean package

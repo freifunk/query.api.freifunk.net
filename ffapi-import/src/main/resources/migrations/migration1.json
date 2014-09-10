@@ -1,5 +1,6 @@
 {
     "topic_types": [
+        
         {
             "value": "Freifunk Community Name",
             "uri": "net.freifunk.community.name",
@@ -14,6 +15,7 @@
                 }
             ]
         },
+        
         {
             "value": "Freifunk Community API Version",
             "uri": "net.freifunk.community.api_version",
@@ -28,20 +30,63 @@
                 }
              ]
         },
+        
         {
-            "value":           "Freifunk Community",
-            "uri":             "net.freifunk.community",
-            "data_type_uri":   "dm4.core.composite",
+            "value": "Freifunk Community API Last Modified",
+            "uri": "net.freifunk.community.api_mtime",
+            "data_type_uri": "dm4.core.text",
+            "index_mode_uris": ["dm4.core.fulltext", "dm4.core.fulltext_key"],
+            "view_config_topics": [
+                {
+                    "type_uri": "dm4.webclient.view_config",
+                    "composite": {
+                        "dm4.webclient.show_in_create_menu": false
+                    }
+                }
+             ]
+        },
+        
+        {
+            "value": "Freifunk Community VPN",
+            "uri": "net.freifunk.community.vpn",
+            "data_type_uri": "dm4.core.text",
+            "index_mode_uris": ["dm4.core.fulltext", "dm4.core.key"],
+            "view_config_topics": [
+                {
+                    "type_uri": "dm4.webclient.view_config",
+                    "composite": {
+                        "dm4.webclient.show_in_create_menu": false
+                    }
+                }
+             ]
+        },
+        
+        ### Technical Details: Legals
+        
+        {
+            "value": "Freifunk Community Legals Value",
+            "uri": "net.freifunk.community.legals_value",
+            "data_type_uri": "dm4.core.text",
+            "index_mode_uris": ["dm4.core.fulltext", "dm4.core.key"],
+            "view_config_topics": [
+                {
+                    "type_uri": "dm4.webclient.view_config",
+                    "composite": {
+                        "dm4.webclient.show_in_create_menu": false
+                    }
+                }
+             ]
+        },
+        {
+            "value": "Freifunk Community Legals",
+            "uri": "net.freifunk.community.legals",
+            "data_type_uri": "dm4.core.composite",
             "assoc_defs": [
                 {
-                    "child_type_uri":        "net.freifunk.community.name",
-                    "child_cardinality_uri": "dm4.core.one",
-                    "assoc_type_uri":        "dm4.core.composition_def"
-                },
-                {
-                    "child_type_uri":        "net.freifunk.community.api_version",
-                    "child_cardinality_uri": "dm4.core.one",
-                    "assoc_type_uri":        "dm4.core.composition_def"
+                    "child_type_uri":           "net.freifunk.community.legals_value",
+                    "child_cardinality_uri":    "dm4.core.many",
+                    "parent_cardinality_uri":   "dm4.core.one",
+                    "assoc_type_uri":           "dm4.core.aggregation_def"
                 }
             ],
             "view_config_topics": [
@@ -49,6 +94,312 @@
                     "type_uri": "dm4.webclient.view_config",
                     "composite": {
                         "dm4.webclient.show_in_create_menu": false
+                    }
+                }
+             ]
+        },
+        
+        ### Technical Details: Firmware
+        
+        {
+            "value": "Freifunk Community Firmware Name",
+            "uri": "net.freifunk.community.firmware_name",
+            "data_type_uri": "dm4.core.text",
+            "index_mode_uris": ["dm4.core.fulltext", "dm4.core.key"],
+            "view_config_topics": [
+                {
+                    "type_uri": "dm4.webclient.view_config",
+                    "composite": {
+                        "dm4.webclient.show_in_create_menu": false
+                    }
+                }
+             ]
+        },
+        {
+            "value": "Freifunk Community Firmware URL",
+            "uri": "net.freifunk.community.firmware_url",
+            "data_type_uri": "dm4.core.text",
+            "index_mode_uris": ["dm4.core.fulltext", "dm4.core.key"],
+            "view_config_topics": [
+                {
+                    "type_uri": "dm4.webclient.view_config",
+                    "composite": {
+                        "dm4.webclient.show_in_create_menu": false
+                    }
+                }
+             ]
+        },
+        {
+            "value": "Freifunk Community Firmware Docs",
+            "uri": "net.freifunk.community.firmware_docs",
+            "data_type_uri": "dm4.core.text",
+            "index_mode_uris": ["dm4.core.fulltext", "dm4.core.key"],
+            "view_config_topics": [
+                {
+                    "type_uri": "dm4.webclient.view_config",
+                    "composite": {
+                        "dm4.webclient.show_in_create_menu": false
+                    }
+                }
+             ]
+        },
+        {
+            "value": "Freifunk Community Firmware",
+            "uri": "net.freifunk.community.firmware",
+            "data_type_uri": "dm4.core.composite",
+            "assoc_defs": [
+                {
+                    "child_type_uri":           "net.freifunk.community.firmware_name",
+                    "child_cardinality_uri":    "dm4.core.many",
+                    "parent_cardinality_uri":   "dm4.core.one",
+                    "assoc_type_uri":           "dm4.core.aggregation_def"
+                },
+                {
+                    "child_type_uri":           "net.freifunk.community.firmware_url",
+                    "child_cardinality_uri":    "dm4.core.many",
+                    "parent_cardinality_uri":   "dm4.core.one",
+                    "assoc_type_uri":           "dm4.core.aggregation_def"
+                },
+                {
+                    "child_type_uri":           "net.freifunk.community.firmware_docs",
+                    "child_cardinality_uri":    "dm4.core.many",
+                    "parent_cardinality_uri":   "dm4.core.one",
+                    "assoc_type_uri":           "dm4.core.aggregation_def"
+                }
+                
+            ],
+            "view_config_topics": [
+                {
+                    "type_uri": "dm4.webclient.view_config",
+                    "composite": {
+                        "dm4.webclient.show_in_create_menu": false
+                    }
+                }
+             ]
+        },
+        
+        ### Technical Details Routing
+        
+        {
+            "value": "Freifunk Community Routing Value",
+            "uri": "net.freifunk.community.routing_value",
+            "data_type_uri": "dm4.core.text",
+            "index_mode_uris": ["dm4.core.fulltext", "dm4.core.key"],
+            "view_config_topics": [
+                {
+                    "type_uri": "dm4.webclient.view_config",
+                    "composite": {
+                        "dm4.webclient.show_in_create_menu": false
+                    }
+                }
+             ]
+        },
+        {
+            "value": "Freifunk Community Routing",
+            "uri": "net.freifunk.community.routing",
+            "data_type_uri": "dm4.core.composite",
+            "assoc_defs": [
+                {
+                    "child_type_uri":           "net.freifunk.community.routing_value",
+                    "child_cardinality_uri":    "dm4.core.many",
+                    "parent_cardinality_uri":   "dm4.core.one",
+                    "assoc_type_uri":           "dm4.core.aggregation_def"
+                }
+            ],
+            "view_config_topics": [
+                {
+                    "type_uri": "dm4.webclient.view_config",
+                    "composite": {
+                        "dm4.webclient.show_in_create_menu": false
+                    }
+                }
+             ]
+        },
+        
+        ### Technical Details: Updatemode
+        
+        {
+            "value": "Freifunk Community Updatemode Value",
+            "uri": "net.freifunk.community.updatemode_value",
+            "data_type_uri": "dm4.core.text",
+            "index_mode_uris": ["dm4.core.fulltext", "dm4.core.key"],
+            "view_config_topics": [
+                {
+                    "type_uri": "dm4.webclient.view_config",
+                    "composite": {
+                        "dm4.webclient.show_in_create_menu": false
+                    }
+                }
+             ]
+        },
+        
+        {
+            "value": "Freifunk Community Updatemode",
+            "uri": "net.freifunk.community.updatemode",
+            "data_type_uri": "dm4.core.composite",
+            "assoc_defs": [
+                {
+                    "child_type_uri":           "net.freifunk.community.updatemode_value",
+                    "child_cardinality_uri":    "dm4.core.many",
+                    "parent_cardinality_uri":   "dm4.core.one",
+                    "assoc_type_uri":           "dm4.core.aggregation_def"
+                }
+            ],
+            "view_config_topics": [
+                {
+                    "type_uri": "dm4.webclient.view_config",
+                    "composite": {
+                        "dm4.webclient.show_in_create_menu": false
+                    }
+                }
+             ]
+        },
+        
+        ### Technical Details: Networks
+        
+        {
+            "value": "Freifunk Community Network Protocol",
+            "uri": "net.freifunk.community.network_protocol",
+            "data_type_uri": "dm4.core.text",
+            "index_mode_uris": ["dm4.core.fulltext", "dm4.core.key"],
+            "view_config_topics": [
+                {
+                    "type_uri": "dm4.webclient.view_config",
+                    "composite": {
+                        "dm4.webclient.show_in_create_menu": false
+                    }
+                }
+             ]
+        },
+        {
+            "value": "Freifunk Community Network Value",
+            "uri": "net.freifunk.community.network_value",
+            "data_type_uri": "dm4.core.text",
+            "index_mode_uris": ["dm4.core.fulltext", "dm4.core.key"],
+            "view_config_topics": [
+                {
+                    "type_uri": "dm4.webclient.view_config",
+                    "composite": {
+                        "dm4.webclient.show_in_create_menu": false
+                    }
+                }
+             ]
+        },
+        {
+            "value": "Freifunk Community Network",
+            "uri": "net.freifunk.community.network",
+            "data_type_uri": "dm4.core.composite",
+            "assoc_defs": [
+                {
+                    "child_type_uri":           "net.freifunk.community.network_protocol",
+                    "child_cardinality_uri":    "dm4.core.one",
+                    "parent_cardinality_uri":   "dm4.core.one",
+                    "assoc_type_uri":           "dm4.core.composition_def"
+                },
+                {
+                    "child_type_uri":           "net.freifunk.community.network_value",
+                    "child_cardinality_uri":    "dm4.core.one",
+                    "parent_cardinality_uri":   "dm4.core.one",
+                    "assoc_type_uri":           "dm4.core.composition_def"
+                }               
+            ],
+            "view_config_topics": [
+                {
+                    "type_uri": "dm4.webclient.view_config",
+                    "composite": {
+                        "dm4.webclient.show_in_create_menu": false
+                    }
+                }
+             ]
+        },
+        
+        {
+            "value": "Freifunk Community Networks",
+            "uri": "net.freifunk.community.networks",
+            "data_type_uri": "dm4.core.composite",
+            "assoc_defs": [
+                {
+                    "child_type_uri":           "net.freifunk.community.network",
+                    "child_cardinality_uri":    "dm4.core.many",
+                    "parent_cardinality_uri":   "dm4.core.one",
+                    "assoc_type_uri":           "dm4.core.composition_def"
+                }               
+            ],
+            "view_config_topics": [
+                {
+                    "type_uri": "dm4.webclient.view_config",
+                    "composite": {
+                        "dm4.webclient.show_in_create_menu": false
+                    }
+                }
+             ]
+        },
+
+        ### Freifunk Community
+        
+        {
+            "value":           "Freifunk Community",
+            "uri":             "net.freifunk.community",
+            "data_type_uri":   "dm4.core.composite",
+            "assoc_defs": [
+                {
+                    "child_type_uri":           "net.freifunk.community.name",
+                    "child_cardinality_uri":    "dm4.core.one",
+                    "assoc_type_uri":           "dm4.core.composition_def"
+                },
+                {
+                    "child_type_uri":           "net.freifunk.community.api_version",
+                    "child_cardinality_uri":    "dm4.core.one",
+                    "parent_cardinality_uri":   "dm4.core.one",
+                    "assoc_type_uri":           "dm4.core.aggregation_def"
+                },
+                {
+                    "child_type_uri":           "net.freifunk.community.api_mtime",
+                    "child_cardinality_uri":    "dm4.core.one",
+                    "assoc_type_uri":           "dm4.core.composition_def"
+                },
+                {
+                    "child_type_uri":           "dm4.webbrowser.url",
+                    "child_cardinality_uri":    "dm4.core.one",
+                    "assoc_type_uri":           "dm4.core.composition_def"
+                },
+                {
+                    "child_type_uri":           "net.freifunk.community.networks",
+                    "child_cardinality_uri":    "dm4.core.one",
+                    "assoc_type_uri":           "dm4.core.composition_def"
+                },
+                {
+                    "child_type_uri":           "net.freifunk.community.vpn",
+                    "child_cardinality_uri":    "dm4.core.one",
+                    "parent_cardinality_uri":   "dm4.core.one",
+                    "assoc_type_uri":           "dm4.core.aggregation_def"
+                },
+                {
+                    "child_type_uri":           "net.freifunk.community.firmware",
+                    "child_cardinality_uri":    "dm4.core.one",
+                    "assoc_type_uri":           "dm4.core.composition_def"
+                },
+                {
+                    "child_type_uri":           "net.freifunk.community.routing",
+                    "child_cardinality_uri":    "dm4.core.one",
+                    "assoc_type_uri":           "dm4.core.composition_def"
+                },
+                {
+                    "child_type_uri":           "net.freifunk.community.legals",
+                    "child_cardinality_uri":    "dm4.core.one",
+                    "assoc_type_uri":           "dm4.core.composition_def"
+                },
+                {
+                    "child_type_uri":           "net.freifunk.community.updatemode",
+                    "child_cardinality_uri":    "dm4.core.one",
+                    "assoc_type_uri":           "dm4.core.composition_def"
+                }
+            ],
+            "view_config_topics": [
+                {
+                    "type_uri": "dm4.webclient.view_config",
+                    "composite": {
+                        "dm4.webclient.show_in_create_menu": true
                     }
                 }
             ]

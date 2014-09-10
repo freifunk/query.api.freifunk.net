@@ -1,29 +1,29 @@
 {
-    topic_types: [
+    "topic_types": [
         {
-            value: "Freifunk Community Name",
-            uri: "net.freifunk.community.name",
-            data_type_uri: "dm4.core.text",
-            index_mode_uris: ["dm4.core.fulltext", "dm4.core.fulltext_key"],
-            view_config_topics: [
+            "value": "Freifunk Community Name",
+            "uri": "net.freifunk.community.name",
+            "data_type_uri": "dm4.core.text",
+            "index_mode_uris": ["dm4.core.fulltext", "dm4.core.fulltext_key"],
+            "view_config_topics": [
                 {
-                    type_uri: "dm4.webclient.view_config",
-                    composite: {
-                        dm4.webclient.show_in_create_menu: false
+                    "type_uri": "dm4.webclient.view_config",
+                    "composite": {
+                        "dm4.webclient.show_in_create_menu": false
                     }
                 }
             ]
         },
         {
-            value: "Freifunk Community API Version",
-            uri: "net.freifunk.community.api_version",
-            data_type_uri: "dm4.core.text",
-            index_mode_uris: ["dm4.core.fulltext", "dm4.core.key"],
-            view_config_topics: [
+            "value": "Freifunk Community API Version",
+            "uri": "net.freifunk.community.api_version",
+            "data_type_uri": "dm4.core.text",
+            "index_mode_uris": ["dm4.core.fulltext", "dm4.core.key"],
+            "view_config_topics": [
                 {
-                    type_uri: "dm4.webclient.view_config",
-                    composite: {
-                        dm4.webclient.show_in_create_menu: false
+                    "type_uri": "dm4.webclient.view_config",
+                    "composite": {
+                        "dm4.webclient.show_in_create_menu": false
                     }
                 }
              ]
@@ -55,4 +55,3 @@
         }
     ]
 }
-

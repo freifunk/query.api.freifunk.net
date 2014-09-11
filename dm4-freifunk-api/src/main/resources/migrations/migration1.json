@@ -150,21 +150,21 @@
             "assoc_defs": [
                 {
                     "child_type_uri":           "net.freifunk.community.firmware_name",
-                    "child_cardinality_uri":    "dm4.core.many",
+                    "child_cardinality_uri":    "dm4.core.one",
                     "parent_cardinality_uri":   "dm4.core.one",
                     "assoc_type_uri":           "dm4.core.aggregation_def"
                 },
                 {
                     "child_type_uri":           "net.freifunk.community.firmware_url",
-                    "child_cardinality_uri":    "dm4.core.many",
+                    "child_cardinality_uri":    "dm4.core.one",
                     "parent_cardinality_uri":   "dm4.core.one",
-                    "assoc_type_uri":           "dm4.core.aggregation_def"
+                    "assoc_type_uri":           "dm4.core.composition_def"
                 },
                 {
                     "child_type_uri":           "net.freifunk.community.firmware_docs",
-                    "child_cardinality_uri":    "dm4.core.many",
+                    "child_cardinality_uri":    "dm4.core.one",
                     "parent_cardinality_uri":   "dm4.core.one",
-                    "assoc_type_uri":           "dm4.core.aggregation_def"
+                    "assoc_type_uri":           "dm4.core.composition_def"
                 }
                 
             ],
@@ -272,8 +272,8 @@
              ]
         },
         {
-            "value": "Freifunk Community Network Value",
-            "uri": "net.freifunk.community.network_value",
+            "value": "Freifunk Community Network Mask",
+            "uri": "net.freifunk.community.network_mask",
             "data_type_uri": "dm4.core.text",
             "index_mode_uris": ["dm4.core.fulltext", "dm4.core.key"],
             "view_config_topics": [
@@ -294,10 +294,10 @@
                     "child_type_uri":           "net.freifunk.community.network_protocol",
                     "child_cardinality_uri":    "dm4.core.one",
                     "parent_cardinality_uri":   "dm4.core.one",
-                    "assoc_type_uri":           "dm4.core.composition_def"
+                    "assoc_type_uri":           "dm4.core.aggregation_def"
                 },
                 {
-                    "child_type_uri":           "net.freifunk.community.network_value",
+                    "child_type_uri":           "net.freifunk.community.network_mask",
                     "child_cardinality_uri":    "dm4.core.one",
                     "parent_cardinality_uri":   "dm4.core.one",
                     "assoc_type_uri":           "dm4.core.composition_def"
@@ -376,7 +376,8 @@
                 },
                 {
                     "child_type_uri":           "net.freifunk.community.firmware",
-                    "child_cardinality_uri":    "dm4.core.one",
+                    "child_cardinality_uri":    "dm4.core.many",
+                    "parent_cardinality_uri":   "dm4.core.one",
                     "assoc_type_uri":           "dm4.core.composition_def"
                 },
                 {

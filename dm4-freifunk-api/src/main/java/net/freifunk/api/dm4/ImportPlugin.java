@@ -108,7 +108,7 @@ public class ImportPlugin extends PluginActivator {
                     dms.createTopic(new TopicModel("net.freifunk.community", communityModel), null);
                 }
             }
-            log.info("### Importer created" + community_keys.length() + " Freifunk Communities from API Directory");
+            log.info("### Imported " + community_keys.length() + " Freifunk Communities from API Directory");
         } catch (UnsupportedEncodingException ex) {
             log.severe(ex.getMessage());
         } catch (IOException ex) {

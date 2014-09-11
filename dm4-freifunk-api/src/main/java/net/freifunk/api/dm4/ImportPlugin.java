@@ -24,6 +24,22 @@ public class ImportPlugin extends PluginActivator {
     private Logger log = Logger.getLogger(getClass().getName());
     
     private final String FF_API_CHARSET = "UTF-8";
+    
+    // --- DeepaMehta 4 Topic Types
+    
+    private static final String DM4_WEBBROWSER_URL = "dm4.webbrowser.url";
+    
+    // --- Freifunk Topic Types
+    
+    private static final String FFN_COMMUNITY_TYPE = "net.freifunk.community";
+    private static final String FFN_COMMUNITY_NAME_TYPE = "net.freifunk.community.name";
+    private static final String FFN_COMMUNITY_MTIME_TYPE = "net.freifunk.community.api_mtime";
+    private static final String FFN_COMMUNITY_APIVERSION_TYPE = "net.freifunk.community.name";
+    private static final String FFN_COMMUNITY_VPN_TYPE = "net.freifunk.community.vpn";
+    // ### Values for the following types not yet processed
+    private static final String FFN_COMMUNITY_NETWORK_TYPE = "net.freifunk.community.network";
+    private static final String FFN_COMMUNITY_LEGALS_TYPE = "net.freifunk.community.legals";
+    private static final String FFN_COMMUNITY_ROUTING_TYPE = "net.freifunk.community.routing";
 
     @Override
     public void init() {
@@ -80,68 +96,70 @@ public class ImportPlugin extends PluginActivator {
                         freifunkApiSummaryObject.getJSONObject(community_keys.getString(i));
                     // 5) Convert API JSONObject to a "Freifunk Community"
                     CompositeValueModel communityModel = new CompositeValueModel();
+                    // 5.1) Put Topics (Composition Definition)
                     if (freifunkCommunity.has("name")) {
                         String name = freifunkCommunity.getString("name");
                         log.info("Hello Freifunk Community: " + name);
-                        communityModel.put("net.freifunk.community.name", name);
+                        communityModel.put(FFN_COMMUNITY_NAME_TYPE, name);
                     }
                     if (freifunkCommunity.has("url")) {
                         String url = freifunkCommunity.getString("url");
-                        communityModel.put("dm4.webbrowser.url", url);
+                        communityModel.put(DM4_WEBBROWSER_URL, url);
                     }
+                    if (freifunkCommunity.has("mtime")) {
+                        String mtime = freifunkCommunity.getString("mtime");
+                        communityModel.put(FFN_COMMUNITY_MTIME_TYPE, mtime);
+                    }
+                    // 5.1) Put or Reference Topics (Aggregation Definition)
                     if (freifunkCommunity.has("techDetails")) {
                         JSONObject techDetails = freifunkCommunity.getJSONObject("techDetails");
                         if (techDetails.has("vpn")) {
                             String vpn = techDetails.getString("vpn");
-                            enrichAboutVPNTopic(communityModel, vpn);
+                            enrichAboutVPNTopic(communityModel, vpn);  // implementing simple getOrCreateTopic-Logic
                         }
                         // ### ..
                     }
-                    if (freifunkCommunity.has("mtime")) {
-                        String mtime = freifunkCommunity.getString("mtime");
-                        communityModel.put("net.freifunk.community.api_mtime", mtime);
-                    }
                     if (freifunkCommunity.has("api")) {
                         String api = freifunkCommunity.getString("api");
-                        enrichAboutApiVersionTopic(communityModel, api);
+                        enrichAboutApiVersionTopic(communityModel, api); // implementing simple getOrCreateTopic-Logic
                     }
-                    dms.createTopic(new TopicModel("net.freifunk.community", communityModel), null);
+                    dms.createTopic(new TopicModel(FFN_COMMUNITY_TYPE, communityModel), null);
                 }
             }
             log.info("### Imported " + community_keys.length() + " Freifunk Communities from API Directory");
         } catch (UnsupportedEncodingException ex) {
-            log.severe(ex.getMessage());
+            throw new RuntimeException(ex);
         } catch (IOException ex) {
-            log.severe(ex.getMessage());
+            throw new RuntimeException(ex);
         } catch (JSONException ex) {
-            log.severe(ex.getMessage());
+            throw new RuntimeException(ex);
         }
     }
     
     private void deleteAllImportedDataNodes () {
-        for (Topic node : dms.getTopics("net.freifunk.community", false, 0)) {
+        for (Topic node : dms.getTopics(FFN_COMMUNITY_TYPE, false, 0)) {
             dms.deleteTopic(node.getId());
         }
     }
 
     private void enrichAboutApiVersionTopic(CompositeValueModel communityModel, String api) {
         // Note: IndexMode.KEY needs to be set on queried TopicType to succeed with the following type of query in DM4
-        Topic existingApiTopic = dms.getTopic("net.freifunk.community.api_version", new SimpleValue(api), false);
+        Topic existingApiTopic = dms.getTopic(FFN_COMMUNITY_APIVERSION_TYPE, new SimpleValue(api), false);
         if (existingApiTopic != null) { // Reference existing API Version Topic
-            communityModel.putRef("net.freifunk.community.api_version", existingApiTopic.getId());
+            communityModel.putRef(FFN_COMMUNITY_APIVERSION_TYPE, existingApiTopic.getId());
         } else { // Create new API Version Topic
-            communityModel.put("net.freifunk.community.api_version", api);
+            communityModel.put(FFN_COMMUNITY_APIVERSION_TYPE, api);
         }
     }
 
     private void enrichAboutVPNTopic(CompositeValueModel communityModel, String vpn) {
         // Note: IndexMode.KEY needs to be set on queried TopicType to succeed with the following type of query in DM4
         String alteredVPNValue = vpn.toLowerCase().trim();
-        Topic existingVPNTopic = dms.getTopic("net.freifunk.community.vpn", new SimpleValue(alteredVPNValue), false);
+        Topic existingVPNTopic = dms.getTopic(FFN_COMMUNITY_VPN_TYPE, new SimpleValue(alteredVPNValue), false);
         if (existingVPNTopic != null) { // Reference existing VPN Value Topic
-            communityModel.putRef("net.freifunk.community.vpn", existingVPNTopic.getId());
+            communityModel.putRef(FFN_COMMUNITY_VPN_TYPE, existingVPNTopic.getId());
         } else { // Create new VPN Value Topic
-            communityModel.put("net.freifunk.community.vpn", alteredVPNValue);
+            communityModel.put(FFN_COMMUNITY_VPN_TYPE, alteredVPNValue);
         }
     }
     

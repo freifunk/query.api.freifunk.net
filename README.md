@@ -33,7 +33,7 @@ In DeepaMehta's pom.xml: add the plugin's target directory (here: `/home/mt/quer
             ${project.basedir}/modules/dm4-webclient/target,
             ...
             ${project.basedir}/modules/dm4-storage-neo4j/target,
-            /home/mt/query/query.api.freifunk.net/ffapi-import/target
+            /home/mt/query/query.api.freifunk.net/dm4-freifunk-api/target
         ]]>
     </felix.fileinstall.dir>
     ...
@@ -46,7 +46,7 @@ Now start DeepaMehta. In the directory deepamehta (where you've build):
 mvn pax:run 
 ```
 
-In the Plugin directory (here: `/home/mt/query/query.api.freifunk.net/ffapi-import` run: 
+In the Plugin directory (here: `/home/mt/query/query.api.freifunk.net/dm4-freifunk-api` run: 
 
 ```bash
 mvn clean package

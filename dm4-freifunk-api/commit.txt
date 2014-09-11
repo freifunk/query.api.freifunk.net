@@ -1,0 +1,7 @@
+Imports ff-community-nodes with simple child-types.
+
+On each plugin init(), for development purposes:
+- all current community nodes in the DB are deleted
+- all community nodes are newly created (atm: just with their simple types)
+
+Navigating Freifunk Communities via "API Version" functional.

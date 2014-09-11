@@ -10,6 +10,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
@@ -23,11 +27,27 @@ public class ImportPlugin extends PluginActivator {
 
     @Override
     public void init() {
-        deleteAllImportedDataNodes();
-        log.info("Freifunk API Data Plugin is initializing");
-        InputStream ffDirectory = getStaticResource("web/ffSummarizedDir.json");
-        log.info("Freifunk API Data Plugin fetched summarized API Directory");
-        processSummarizedAPIDirectory(ffDirectory);
+        try {
+            deleteAllImportedDataNodes();
+            log.info("Freifunk API Data Plugin is initializing");
+            // 1) Fetch API Directory
+            URL apiDirectoryEndpoint = new URL("http://freifunk.net/map/ffSummarizedDir.json");
+            HttpURLConnection connection = (HttpURLConnection) apiDirectoryEndpoint.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setRequestProperty("User-Agent", "DeepaMehta 4 - Freifunk API Data");
+            // 2) Check Response
+            int httpStatusCode = connection.getResponseCode();
+            if (httpStatusCode != HttpURLConnection.HTTP_OK) {
+                throw new RuntimeException("HTTP connection error, Status: " + httpStatusCode);
+            }
+            // 3) Start importing/processing the directory
+            log.info("OK -  Freifunk API Data Plugin fetched summarized API Directory");
+            processSummarizedAPIDirectory(connection.getInputStream());
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(ImportPlugin.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(ImportPlugin.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     

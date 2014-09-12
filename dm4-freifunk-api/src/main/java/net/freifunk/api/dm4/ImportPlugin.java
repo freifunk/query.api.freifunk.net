@@ -4,7 +4,9 @@ import de.deepamehta.core.Topic;
 import de.deepamehta.core.model.CompositeValueModel;
 import de.deepamehta.core.model.SimpleValue;
 import de.deepamehta.core.model.TopicModel;
+import de.deepamehta.core.model.TopicTypeModel;
 import de.deepamehta.core.osgi.PluginActivator;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -73,6 +75,9 @@ public class ImportPlugin extends PluginActivator {
     // --- Private Utility Methods
     // --
     private void processSummarizedAPIDirectory(InputStream summarizedDirectory) {
+    	
+    	TopicTypeModel model = new TopicTypeModel("freifunk.net.community.test", "freifunk.net.community.test", "freifunk.net.community.test");
+    	dms.createTopicType(model);
         log.info("Freifunk API Data Plugin starts processing directory");
         JSONObject freifunkApiSummaryObject = null;
         try {

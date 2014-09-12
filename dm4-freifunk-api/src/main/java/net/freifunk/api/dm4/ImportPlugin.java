@@ -15,6 +15,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -71,7 +72,6 @@ public class ImportPlugin extends PluginActivator {
     // --
     // --- Private Utility Methods
     // --
-    
     private void processSummarizedAPIDirectory(InputStream summarizedDirectory) {
         log.info("Freifunk API Data Plugin starts processing directory");
         JSONObject freifunkApiSummaryObject = null;
@@ -82,6 +82,7 @@ public class ImportPlugin extends PluginActivator {
             for (String input; (input = reader.readLine()) != null;) {
                 data.append(input);
             }
+  
             reader.close();
             // 2) String to JSONObject
             if (data.toString().isEmpty()) throw new RuntimeException("Somebody handed us an EMPTY InputStream");

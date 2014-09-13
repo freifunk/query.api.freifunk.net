@@ -6,6 +6,7 @@ import de.deepamehta.core.model.SimpleValue;
 import de.deepamehta.core.model.TopicModel;
 import de.deepamehta.core.model.TopicTypeModel;
 import de.deepamehta.core.osgi.PluginActivator;
+import de.deepamehta.core.storage.spi.DeepaMehtaTransaction;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -102,6 +103,7 @@ public class ImportPlugin extends PluginActivator {
 			if (community_keys.length() > 1) {
 				log.info("Identified " + community_keys.length()
 						+ " Freifunk Communities in API Directory");
+
 				for (int i = 0; i < community_keys.length(); i++) {
 					// 4) Grab single community
 					JSONObject freifunkCommunity = freifunkApiSummaryObject
@@ -128,9 +130,9 @@ public class ImportPlugin extends PluginActivator {
 								.getJSONObject("techDetails");
 						if (techDetails.has("vpn")) {
 							String vpn = techDetails.getString("vpn");
-							enrichAboutVPNTopic(communityModel, vpn); // implementing
-																		// simple
-																		// getOrCreateTopic-Logic
+							enrichAboutVPNTopic(communityModel, vpn); // implementing 
+																	  // simple
+																	  // getOrCreateTopic-Logic
 						}
 						// ### ..
 					}
@@ -138,15 +140,27 @@ public class ImportPlugin extends PluginActivator {
 						String api = freifunkCommunity.getString("api");
 						enrichAboutApiVersionTopic(communityModel, api); // implementing
 																			// simple
-																			// getOrCreateTopic-Logic
+						// getOrCreateTopic-Logic
+						DeepaMehtaTransaction tx = dms.beginTx();
+						try {
+
+							dms.createTopic(new TopicModel(FFN_COMMUNITY_TYPE,
+									communityModel));
+							tx.success();
+						} catch (Exception e) {
+							log.log(Level.SEVERE,
+									"### Error creating Tropic: ", e);
+							tx.failure();
+							throw new RuntimeException(e);
+						} finally {
+							tx.finish();
+						}
+
+						log.info("### Imported " + community_keys.length()
+								+ " Freifunk Communities from API Directory");
 					}
-					
-					dms.createTopic(new TopicModel(FFN_COMMUNITY_TYPE,
-							communityModel));
 				}
 			}
-			log.info("### Imported " + community_keys.length()
-					+ " Freifunk Communities from API Directory");
 		} catch (UnsupportedEncodingException ex) {
 			throw new RuntimeException(ex);
 		} catch (IOException ex) {

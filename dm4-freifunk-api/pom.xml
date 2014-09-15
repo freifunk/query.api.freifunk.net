@@ -26,7 +26,12 @@
 			<groupId>de.deepamehta</groupId>
 			<artifactId>deepamehta-webbrowser</artifactId>
 			<version>4.4-SNAPSHOT</version>
-		</dependency>
+        </dependency>
+        <dependency>
+              <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                  <version>2.4.2</version>
+        </dependency>
 	</dependencies>
 
 	<build>
@@ -35,7 +40,10 @@
 				<groupId>org.apache.felix</groupId>
 				<artifactId>maven-bundle-plugin</artifactId>
 				<configuration>
-					<instructions>
+                    <instructions>
+                        <Export-Package>
+                            com.fasterxml.jackson.* 
+                        </Export-Package>
 						<Bundle-Activator>
 							net.freifunk.api.dm4.ImportPlugin
 						</Bundle-Activator>

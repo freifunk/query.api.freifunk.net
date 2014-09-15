@@ -4,7 +4,6 @@ import de.deepamehta.core.Topic;
 import de.deepamehta.core.model.CompositeValueModel;
 import de.deepamehta.core.model.SimpleValue;
 import de.deepamehta.core.model.TopicModel;
-import de.deepamehta.core.model.TopicTypeModel;
 import de.deepamehta.core.osgi.PluginActivator;
 import de.deepamehta.core.storage.spi.DeepaMehtaTransaction;
 
@@ -172,7 +171,17 @@ public class ImportPlugin extends PluginActivator {
 
 	private void deleteAllImportedDataNodes() {
 		for (Topic node : dms.getTopics(FFN_COMMUNITY_TYPE, false, 0)) {
-			dms.deleteTopic(node.getId());
+			DeepaMehtaTransaction tx = dms.beginTx();
+			try {
+				dms.deleteTopic(node.getId());
+			} catch (Exception e) {
+				log.log(Level.SEVERE,
+						"### Error deleting Tropic: ", e);
+				tx.failure();
+				throw new RuntimeException(e);
+			} finally {
+				tx.finish();
+			}
 		}
 	}
 

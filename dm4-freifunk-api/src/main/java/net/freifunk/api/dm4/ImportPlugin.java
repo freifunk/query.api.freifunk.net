@@ -5,6 +5,8 @@ import de.deepamehta.core.model.CompositeValueModel;
 import de.deepamehta.core.model.SimpleValue;
 import de.deepamehta.core.model.TopicModel;
 import de.deepamehta.core.osgi.PluginActivator;
+import de.deepamehta.core.storage.spi.DeepaMehtaTransaction;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,6 +17,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -115,15 +118,26 @@ public class ImportPlugin extends PluginActivator {
                         JSONObject techDetails = freifunkCommunity.getJSONObject("techDetails");
                         if (techDetails.has("vpn")) {
                             String vpn = techDetails.getString("vpn");
-                            enrichAboutVPNTopic(communityModel, vpn);  // implementing simple getOrCreateTopic-Logic
+                            // implementing simple getOrCreateTopic-Logic
+                            enrichAboutVPNTopic(communityModel, vpn);
                         }
                         // ### ..
                     }
                     if (freifunkCommunity.has("api")) {
                         String api = freifunkCommunity.getString("api");
-                        enrichAboutApiVersionTopic(communityModel, api); // implementing simple getOrCreateTopic-Logic
+                        // implementing simple getOrCreateTopic-Logic
+                        enrichAboutApiVersionTopic(communityModel, api);
                     }
-                    dms.createTopic(new TopicModel(FFN_COMMUNITY_TYPE, communityModel), null);
+                    DeepaMehtaTransaction tx = dms.beginTx();
+                    try {
+                        dms.createTopic(new TopicModel(FFN_COMMUNITY_TYPE, communityModel), null);
+                        tx.success();
+                    } catch (Exception e) {
+                        log.severe("Error creating \"Freifunk Community\" topic");
+                        throw new RuntimeException(e);
+                    } finally {
+                        tx.finish();
+                    }
                 }
             }
             log.info("### Imported " + community_keys.length() + " Freifunk Communities from API Directory");
@@ -138,7 +152,16 @@ public class ImportPlugin extends PluginActivator {
     
     private void deleteAllImportedDataNodes () {
         for (Topic node : dms.getTopics(FFN_COMMUNITY_TYPE, false, 0)) {
-            dms.deleteTopic(node.getId());
+            DeepaMehtaTransaction tx = dms.beginTx();
+            try {
+                dms.deleteTopic(node.getId());
+                tx.success();
+            } catch (Exception e) {
+                log.severe("Error deleting imported \"Freifunk Community\" topic");
+                throw new RuntimeException(e);
+            } finally {
+                tx.finish();
+            }
         }
     }
 
@@ -162,5 +185,4 @@ public class ImportPlugin extends PluginActivator {
             communityModel.put(FFN_COMMUNITY_VPN_TYPE, alteredVPNValue);
         }
     }
-    
 }

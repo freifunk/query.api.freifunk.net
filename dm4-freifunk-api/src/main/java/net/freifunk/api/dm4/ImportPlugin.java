@@ -130,7 +130,7 @@ public class ImportPlugin extends PluginActivator {
                     }
                     DeepaMehtaTransaction tx = dms.beginTx();
                     try {
-                        dms.createTopic(new TopicModel(FFN_COMMUNITY_TYPE, communityModel), null);
+                        dms.createTopic(new TopicModel(FFN_COMMUNITY_TYPE, communityModel));
                         tx.success();
                     } catch (Exception e) {
                         log.severe("Error creating \"Freifunk Community\" topic");
@@ -151,7 +151,7 @@ public class ImportPlugin extends PluginActivator {
     }
     
     private void deleteAllImportedDataNodes () {
-        for (Topic node : dms.getTopics(FFN_COMMUNITY_TYPE, false, 0)) {
+        for (Topic node : dms.getTopics(FFN_COMMUNITY_TYPE, 0)) {
             DeepaMehtaTransaction tx = dms.beginTx();
             try {
                 dms.deleteTopic(node.getId());
@@ -167,7 +167,7 @@ public class ImportPlugin extends PluginActivator {
 
     private void enrichAboutApiVersionTopic(CompositeValueModel communityModel, String api) {
         // Note: IndexMode.KEY needs to be set on queried TopicType to succeed with the following type of query in DM4
-        Topic existingApiTopic = dms.getTopic(FFN_COMMUNITY_APIVERSION_TYPE, new SimpleValue(api), false);
+        Topic existingApiTopic = dms.getTopic(FFN_COMMUNITY_APIVERSION_TYPE, new SimpleValue(api));
         if (existingApiTopic != null) { // Reference existing API Version Topic
             communityModel.putRef(FFN_COMMUNITY_APIVERSION_TYPE, existingApiTopic.getId());
         } else { // Create new API Version Topic
@@ -178,7 +178,7 @@ public class ImportPlugin extends PluginActivator {
     private void enrichAboutVPNTopic(CompositeValueModel communityModel, String vpn) {
         // Note: IndexMode.KEY needs to be set on queried TopicType to succeed with the following type of query in DM4
         String alteredVPNValue = vpn.toLowerCase().trim();
-        Topic existingVPNTopic = dms.getTopic(FFN_COMMUNITY_VPN_TYPE, new SimpleValue(alteredVPNValue), false);
+        Topic existingVPNTopic = dms.getTopic(FFN_COMMUNITY_VPN_TYPE, new SimpleValue(alteredVPNValue));
         if (existingVPNTopic != null) { // Reference existing VPN Value Topic
             communityModel.putRef(FFN_COMMUNITY_VPN_TYPE, existingVPNTopic.getId());
         } else { // Create new VPN Value Topic

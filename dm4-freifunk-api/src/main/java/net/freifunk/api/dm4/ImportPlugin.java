@@ -34,7 +34,7 @@ public class ImportPlugin extends PluginActivator {
     private static final String FFN_COMMUNITY_TYPE = "net.freifunk.community";
     private static final String FFN_COMMUNITY_NAME_TYPE = "net.freifunk.community.name";
     private static final String FFN_COMMUNITY_MTIME_TYPE = "net.freifunk.community.api_mtime";
-    private static final String FFN_COMMUNITY_APIVERSION_TYPE = "net.freifunk.community.name";
+    private static final String FFN_COMMUNITY_APIVERSION_TYPE = "net.freifunk.community.api_version";
     private static final String FFN_COMMUNITY_VPN_TYPE = "net.freifunk.community.vpn";
     // ### Values for the following types not yet processed
     private static final String FFN_COMMUNITY_NETWORK_TYPE = "net.freifunk.community.network";

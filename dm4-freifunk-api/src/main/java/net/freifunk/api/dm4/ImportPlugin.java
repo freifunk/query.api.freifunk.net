@@ -22,6 +22,13 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
+/**
+ * Freifunk API Summarized Directory Client
+ * 
+ * @author @0x6d54, @glycoknob and @mukil
+ * @version 0.1-SNAPSHOT
+ */
+
 public class ImportPlugin extends PluginActivator {
 
     private Logger log = Logger.getLogger(getClass().getName());
@@ -53,7 +60,7 @@ public class ImportPlugin extends PluginActivator {
             URL apiDirectoryEndpoint = new URL("http://freifunk.net/map/ffSummarizedDir.json");
             HttpURLConnection connection = (HttpURLConnection) apiDirectoryEndpoint.openConnection();
             connection.setRequestMethod("GET");
-            connection.setRequestProperty("User-Agent", "DeepaMehta 4 - Freifunk API Data");
+            connection.setRequestProperty("User-Agent", "DeepaMehta 4 - Freifunk API Directory Client");
             // 2) Check Response
             int httpStatusCode = connection.getResponseCode();
             if (httpStatusCode != HttpURLConnection.HTTP_OK) {
@@ -118,14 +125,14 @@ public class ImportPlugin extends PluginActivator {
                         JSONObject techDetails = freifunkCommunity.getJSONObject("techDetails");
                         if (techDetails.has("vpn")) {
                             String vpn = techDetails.getString("vpn");
-                            // implementing simple getOrCreateTopic-Logic
+                            // implementing simple getOrCreateTopic-Logic for re-using aggregated topics
                             enrichAboutVPNTopic(communityModel, vpn);
                         }
                         // ### ..
                     }
                     if (freifunkCommunity.has("api")) {
                         String api = freifunkCommunity.getString("api");
-                        // implementing simple getOrCreateTopic-Logic
+                        // implementing simple getOrCreateTopic-Logic for re-using aggregated topics
                         enrichAboutApiVersionTopic(communityModel, api);
                     }
                     DeepaMehtaTransaction tx = dms.beginTx();

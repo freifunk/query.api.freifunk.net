@@ -175,29 +175,34 @@ public class ImportPlugin extends PluginActivator {
                             enrichAboutVPNTopic(communityModel, vpn);
                         } else if (techDetails.has("routing")) {
                             // Note: given routing protocol values MAY be many
-                            String protocol_name_value = null;
-                            try { 
-                                // trying to access many routing protocol names by default
+                            // 5.1.2) Gather/parse all routing protocol names for this community in a string-array
+                            String names[] = null;
+                            try {
                                 JSONArray protocols = techDetails.getJSONArray("routing");
-                                for (int k = 0; protocols.length() >= 1; k++) {
-                                    protocol_name_value = protocols.getString(k);
-                                    // ### fixme: latest value wins (just the latest routing name-value is stored)
-                                    enrichAboutRoutingProtocolNameTopic(communityModel, protocol_name_value);
+                                names = new String[protocols.length()];
+                                for (int k = 0; k < protocols.length(); k++) {
+                                    String protocol_name_value = protocols.getString(k);
+                                    names[k] = protocol_name_value;
                                 }
                             } catch (JSONException je) {
                                 // but there also maybe just single-valued (stored as a simple string value)
-                                protocol_name_value = techDetails.getString("routing");
-                                // ... and as #### here in this string, we find: arrays or ..
+                                String protocol_name_value = techDetails.getString("routing");
+                                // ... and as #### here in this string, we find: arrays (!) ..
                                 if (protocol_name_value.contains(",")) { // split up many values
+                                    int n = 0;
                                     String[] parsed_names = protocol_name_value.split(",");
+                                    names = new String[parsed_names.length];
                                     for (String name : parsed_names) {
-                                        // ### fixme: latest value wins (just the latest routing name-value is stored)
-                                        enrichAboutRoutingProtocolNameTopic(communityModel, name);
+                                        names[n] = name;
+                                        n++;
                                     }
-                                } else { // .. a string, to process a simple routing protocol name-value
-                                    enrichAboutRoutingProtocolNameTopic(communityModel, protocol_name_value);
+                                } else { // as well as a sinmple string, to process the routing name-value
+                                    names = new String[1];
+                                    names[0] = protocol_name_value;
                                 }
                             }
+                            // 5.1.3) Write all protocol values for this community
+                            enrichAboutRoutingProtocolNameTopic(communityModel, names);
                         }
                         // ### ..
                     }
@@ -264,25 +269,31 @@ public class ImportPlugin extends PluginActivator {
         }
     }
 
-    private void enrichAboutRoutingProtocolNameTopic(CompositeValueModel communityModel, String protocolName) {
-        // 1) clean up given name value
-        String routingProtocolName = protocolName.replaceAll("\"", ""); // quotation marks
-        routingProtocolName = routingProtocolName.replaceAll("[\\[\\]]", "");
-        if (routingProtocolName.indexOf("[") != -1) routingProtocolName.substring(1);
-        if (routingProtocolName.indexOf("]") != -1) routingProtocolName.substring(routingProtocolName.length()-1);
-        routingProtocolName = routingProtocolName.toLowerCase().trim();
-        if (routingProtocolName.isEmpty()) return; // sanity check
-        // 2) Fetch existing routing value topic (by name-value)
-        // Note: IndexMode.KEY needs to be set on queried TopicType to succeed with the following type of query in DM4
-        Topic routingProtocolValueTopic = dms.getTopic(FFN_COMMUNITY_ROUTING_VALUE_TYPE, 
-            new SimpleValue(routingProtocolName));
-        // 3) Build up intermediary routing topics with (aggregated) many routing value topics
+    private void enrichAboutRoutingProtocolNameTopic(CompositeValueModel communityModel, String[] nameValues) {
         CompositeValueModel routingProtocolTopicModel = new CompositeValueModel();
-        if (routingProtocolValueTopic != null) { // 3.1) Reference existing Routing Value Topic
-            routingProtocolTopicModel.addRef(FFN_COMMUNITY_ROUTING_VALUE_TYPE, routingProtocolValueTopic.getId());
-        } else { // 3.2) Create new Routing Value Topic
-            routingProtocolTopicModel.add(FFN_COMMUNITY_ROUTING_VALUE_TYPE, 
-                new TopicModel(FFN_COMMUNITY_ROUTING_VALUE_TYPE, new SimpleValue(routingProtocolName)));
+        for (String protocolName : nameValues) {
+            // 1) clean up given name value
+            if (protocolName != null) {
+                String routingProtocolName = protocolName.replaceAll("\"", ""); // quotation marks
+                routingProtocolName = routingProtocolName.replaceAll("[\\[\\]]", "");
+                if (routingProtocolName.contains("[")) routingProtocolName.substring(1);
+                if (routingProtocolName.contains("]")) routingProtocolName.substring(routingProtocolName.length()-1);
+                routingProtocolName = routingProtocolName.toLowerCase().trim();
+                if (routingProtocolName.isEmpty()) return; // sanity check
+                // 2) Fetch existing routing value topic (by name-value)
+                // Note: IndexMode.KEY needs to be set on queried TopicType to succeed with the following type of query in DM4
+                Topic routingProtocolValueTopic = dms.getTopic(FFN_COMMUNITY_ROUTING_VALUE_TYPE, 
+                    new SimpleValue(routingProtocolName));
+                // 3) Build up intermediary routing topics with (aggregated) many routing value topics
+                if (routingProtocolValueTopic != null) { // 3.1) Reference existing Routing Value Topic
+                    routingProtocolTopicModel.addRef(FFN_COMMUNITY_ROUTING_VALUE_TYPE, routingProtocolValueTopic.getId());
+                } else { // 3.2) Create new Routing Value Topic
+                    routingProtocolTopicModel.add(FFN_COMMUNITY_ROUTING_VALUE_TYPE, 
+                        new TopicModel(FFN_COMMUNITY_ROUTING_VALUE_TYPE, new SimpleValue(routingProtocolName)));
+                }    
+            } else {
+                log.severe("Given protocol-name is NULL!");
+            }
         }
         // 4) Create and attach new routing topic to \"Freifunk Community\"-Topic
         communityModel.put(FFN_COMMUNITY_ROUTING_TYPE, routingProtocolTopicModel);

@@ -1,12 +1,13 @@
 package net.freifunk.api.dm4;
 
+import de.deepamehta.core.RelatedTopic;
 import de.deepamehta.core.Topic;
 import de.deepamehta.core.model.CompositeValueModel;
 import de.deepamehta.core.model.SimpleValue;
 import de.deepamehta.core.model.TopicModel;
 import de.deepamehta.core.osgi.PluginActivator;
+import de.deepamehta.core.service.ResultList;
 import de.deepamehta.core.storage.spi.DeepaMehtaTransaction;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,9 +16,14 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -29,6 +35,7 @@ import org.codehaus.jettison.json.JSONObject;
  * @version 0.1-SNAPSHOT
  */
 
+@Path("/freifunk-api")
 public class ImportPlugin extends PluginActivator {
 
     private Logger log = Logger.getLogger(getClass().getName());
@@ -75,6 +82,44 @@ public class ImportPlugin extends PluginActivator {
         } catch (IOException ex) {
             Logger.getLogger(ImportPlugin.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+
+    
+    // --
+    // --- Plugin Service Methods (Freifunk API Directory API)
+    // -- 
+    
+    @GET
+    @Path("/routing/{protocol-name}")
+    @Produces("application/json")
+    public List<Topic> getFreifunkCommunitiesByRoutingValue(@PathParam("protocol-name") String value) {
+        ArrayList<Topic> communities = new ArrayList<Topic>();
+        // 1) clean up user input
+        String query = value.toLowerCase().trim();
+        // 2) fetch the one routing-value topic
+        Topic routingValueTopic = dms.getTopic(FFN_COMMUNITY_ROUTING_VALUE_TYPE, new SimpleValue(query));
+        // 3) navigate on the graph to collect all communities related to this topic
+        if (routingValueTopic != null) {
+            // 3.1) navigate one level up in our model, to our (many) intermediary topics
+            ResultList<RelatedTopic> parents = routingValueTopic.getRelatedTopics("dm4.core.aggregation", 
+                "dm4.core.child", "dm4.core.parent", FFN_COMMUNITY_ROUTING_TYPE, 0);
+            for (Topic parent : parents) {
+                // 3.2) one level further up we find one community topic per intermediary (routing) topic
+                RelatedTopic community = parent.getRelatedTopic("dm4.core.composition", 
+                    "dm4.core.child", "dm4.core.parent", FFN_COMMUNITY_TYPE);
+                if (community != null) {
+                    community.loadChildTopics();
+                    communities.add(community);
+                } else {
+                    log.severe("Could not fetch related \"Freifunk Community\" topic for " 
+                        + parent.getSimpleValue() + " ("+parent.getId()+")");
+                }
+            }
+        } else {
+            log.info("No routing name-values found for \"" + value + "\"");
+        }
+        return communities;
     }
     
     
@@ -136,6 +181,7 @@ public class ImportPlugin extends PluginActivator {
                                 JSONArray protocols = techDetails.getJSONArray("routing");
                                 for (int k = 0; protocols.length() >= 1; k++) {
                                     protocol_name_value = protocols.getString(k);
+                                    // ### fixme: latest value wins (just the latest routing name-value is stored)
                                     enrichAboutRoutingProtocolNameTopic(communityModel, protocol_name_value);
                                 }
                             } catch (JSONException je) {
@@ -145,6 +191,7 @@ public class ImportPlugin extends PluginActivator {
                                 if (protocol_name_value.contains(",")) { // split up many values
                                     String[] parsed_names = protocol_name_value.split(",");
                                     for (String name : parsed_names) {
+                                        // ### fixme: latest value wins (just the latest routing name-value is stored)
                                         enrichAboutRoutingProtocolNameTopic(communityModel, name);
                                     }
                                 } else { // .. a string, to process a simple routing protocol name-value

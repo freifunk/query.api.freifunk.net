@@ -85,7 +85,7 @@
                 {
                     "child_type_uri":           "net.freifunk.community.legals_value",
                     "child_cardinality_uri":    "dm4.core.many",
-                    "parent_cardinality_uri":   "dm4.core.one",
+                    "parent_cardinality_uri":   "dm4.core.many",
                     "assoc_type_uri":           "dm4.core.aggregation_def"
                 }
             ],
@@ -202,7 +202,7 @@
                 {
                     "child_type_uri":           "net.freifunk.community.routing_value",
                     "child_cardinality_uri":    "dm4.core.many",
-                    "parent_cardinality_uri":   "dm4.core.one",
+                    "parent_cardinality_uri":   "dm4.core.many",
                     "assoc_type_uri":           "dm4.core.aggregation_def"
                 }
             ],
@@ -241,7 +241,7 @@
                 {
                     "child_type_uri":           "net.freifunk.community.updatemode_value",
                     "child_cardinality_uri":    "dm4.core.many",
-                    "parent_cardinality_uri":   "dm4.core.one",
+                    "parent_cardinality_uri":   "dm4.core.many",
                     "assoc_type_uri":           "dm4.core.aggregation_def"
                 }
             ],

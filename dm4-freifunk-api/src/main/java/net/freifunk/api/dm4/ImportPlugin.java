@@ -2,7 +2,7 @@ package net.freifunk.api.dm4;
 
 import de.deepamehta.core.RelatedTopic;
 import de.deepamehta.core.Topic;
-import de.deepamehta.core.model.CompositeValueModel;
+import de.deepamehta.core.model.ChildTopicsModel;
 import de.deepamehta.core.model.SimpleValue;
 import de.deepamehta.core.model.TopicModel;
 import de.deepamehta.core.osgi.PluginActivator;
@@ -151,7 +151,7 @@ public class ImportPlugin extends PluginActivator {
                     JSONObject freifunkCommunity = 
                         freifunkApiSummaryObject.getJSONObject(community_keys.getString(i));
                     // 5) Convert API JSONObject to a "Freifunk Community"
-                    CompositeValueModel communityModel = new CompositeValueModel();
+                    ChildTopicsModel communityModel = new ChildTopicsModel();
                     // 5.1) Put Topics (Composition Definition)
                     if (freifunkCommunity.has("name")) {
                         String name = freifunkCommunity.getString("name");
@@ -248,7 +248,7 @@ public class ImportPlugin extends PluginActivator {
         }
     }
 
-    private void enrichAboutApiVersionTopic(CompositeValueModel communityModel, String api) {
+    private void enrichAboutApiVersionTopic(ChildTopicsModel communityModel, String api) {
         // Note: IndexMode.KEY needs to be set on queried TopicType to succeed with the following type of query in DM4
         Topic existingApiTopic = dms.getTopic(FFN_COMMUNITY_APIVERSION_TYPE, new SimpleValue(api));
         if (existingApiTopic != null) { // Reference existing API Version Topic
@@ -258,7 +258,7 @@ public class ImportPlugin extends PluginActivator {
         }
     }
 
-    private void enrichAboutVPNTopic(CompositeValueModel communityModel, String vpn) {
+    private void enrichAboutVPNTopic(ChildTopicsModel communityModel, String vpn) {
         // Note: IndexMode.KEY needs to be set on queried TopicType to succeed with the following type of query in DM4
         String alteredVPNValue = vpn.toLowerCase().trim();
         Topic existingVPNTopic = dms.getTopic(FFN_COMMUNITY_VPN_TYPE, new SimpleValue(alteredVPNValue));
@@ -269,8 +269,8 @@ public class ImportPlugin extends PluginActivator {
         }
     }
 
-    private void enrichAboutRoutingProtocolNameTopic(CompositeValueModel communityModel, String[] nameValues) {
-        CompositeValueModel routingProtocolTopicModel = new CompositeValueModel();
+    private void enrichAboutRoutingProtocolNameTopic(ChildTopicsModel communityModel, String[] nameValues) {
+        ChildTopicsModel routingProtocolTopicModel = new ChildTopicsModel();
         for (String protocolName : nameValues) {
             // 1) clean up given name value
             if (protocolName != null) {

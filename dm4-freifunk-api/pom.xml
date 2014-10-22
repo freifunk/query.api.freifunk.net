@@ -6,7 +6,7 @@
 
     <name>Freifunk API Directory Client</name>
     <groupId>net.freifunk.api</groupId>
-    <artifactId>dm4-freifunk-api</artifactId>
+    <artifactId>dm44-freifunk-api</artifactId>
     <version>0.1-SNAPSHOT</version>
     <packaging>bundle</packaging>
 

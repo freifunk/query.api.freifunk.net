@@ -1,6 +1,5 @@
 package net.freifunk.api.dm4;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -21,8 +20,6 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import de.deepamehta.core.Topic;
-import de.deepamehta.core.TopicType;
 import de.deepamehta.core.model.TopicModel;
 import de.deepamehta.core.model.TopicTypeModel;
 
@@ -159,7 +156,7 @@ public class ImportSchema {
         System.out.println(m.writerWithDefaultPrettyPrinter().writeValueAsString(json));
         TopicModel t = new TopicModel(new JSONObject(json.toString()));
         System.err.println(t.getUri());
-        System.err.println(t.getCompositeValueModel());
+        System.err.println(t.getChildTopicsModel());
         return type.pop();
     }
 
